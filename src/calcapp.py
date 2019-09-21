@@ -20,11 +20,12 @@ class calcapp:
             raise ZeroDivisionError("check you value")
 
 
-def start(): 
+def start():
     calc_obj = calcapp()
     expr = sys.argv[1]
     value_1 = int(sys.argv[2])
     value_2 = int(sys.argv[3])
+    testvar="TestValue"
     if expr == "add":
         print(calc_obj.add(value_1, value_2))
     elif expr == "sub":
