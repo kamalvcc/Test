@@ -26,6 +26,7 @@ def start():
     value_1 = int(sys.argv[2])
     value_2 = int(sys.argv[3])
     testvar="TestValue"
+    testvar1 = "TestValue"
     if expr == "add":
         print(calc_obj.add(value_1, value_2))
     elif expr == "sub":
