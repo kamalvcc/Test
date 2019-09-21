@@ -20,7 +20,7 @@ class calcapp:
             raise ZeroDivisionError("check you value")
 
 
-def start():
+def start(): 
     calc_obj = calcapp()
     expr = sys.argv[1]
     value_1 = int(sys.argv[2])
