@@ -1,78 +1,38 @@
 pipeline {
     agent any
+
     stages {
-        stage ("setup") {
+        stage("Build") {
             steps {
-                script {
-                    if(isUnix()) {
-                        sh '''
-                            pip install virtualenv
-                            virtualenv .venv
-                            source .venv/bin/activate
-                            pip install -r requirements.txt
-                        '''
-                    } else {
-                        bat '''
-                            pip install virtualenv
-                            virtualenv .venv
-                            .venv/Script/activate
-                            pip install -r requirements.txt
-                        '''
-                    }
-                }
+                echo "You application building process starts here and some code compilation here..."
             }
         }
-        stage ("Build") {
+        stage("Test") {
             steps {
-                sh '''
-                    source .venv/bin/activate
-                    python setup.py sdist bdist_wheel
-                '''
+                echo "You can execute tests execution here..."
             }
         }
-        stage ("Testing") {
-            parallel {
-                stage ("Unittest") {
-                    steps {
-                        sh '''
-                            source .venv/bin/activate
-                            pytest --cov=src --cov-report=html tests/
-                        '''
-                    }
-                }
-                stage ("Lint check") {
-                    steps {
-                        sh '''
-                            source .venv/bin/activate
-                            pylint src/ tests/
-                        '''
-                    }
-                }
-            }
-        }
-        stage ("Deploy local") {
+        stage("Deploy") {
             steps {
-                sh '''
-                    source .venv/bin/activate
-                    python setup.py install
-                '''
-            }
-        }
-        stage ("Integration Test") {
-            steps {
-                sh '''
-                    source .venv/bin/activate
-                    robot integrationtests/test_app_calc.robot
-                '''
-            }
-        }
-        stage ("Deploy Prod") {
-            steps {
-                sh '''
-                    source .venv/bin/activate
-                    twine upload --repository-url https://test.pypi.org/legacy/ dist/*
-                '''
+                echo "You are going to deploy your application on applicable environment"
             }
         }
     }
+    post {
+    always {
+      echo 'always runs regardless of the completion status of the Pipeline run'
+    }
+    success {
+      echo 'step will run only if the build is successful'
+    }
+    failure {
+      echo 'only when the Pipeline is currently in a "failed" state run, usually expressed in the Web UI with the red indicator.'
+    }
+    unstable {
+      echo 'current Pipeline has "unstable" state, usually by a failed test, code violations and other causes, in order to run. Usually represented in a web UI with a yellow indication.'
+    }
+    changed {
+      echo 'can only be run if the current Pipeline is running at a different state than the previously completed Pipeline'
+    }
+  }
 }
